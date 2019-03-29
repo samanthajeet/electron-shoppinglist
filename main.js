@@ -4,6 +4,9 @@ const path = require('path')
 
 const { app, BrowserWindow, Menu, ipcMain } = electron
 
+// set env
+process.env.NODE_ENV = 'production'
+
 let mainWindow;
 let addWindow;
 
@@ -33,8 +36,8 @@ app.on('ready', function() {
 function createAddWindow(){
     // Create new window
     addWindow = new BrowserWindow({
-      width: 300,
-      height: 200,
+      width: 500,
+      height: 500,
       title: 'add shpoing list item'
     });
 
@@ -51,9 +54,9 @@ function createAddWindow(){
 }
 
 // catch item: add
-ipcMain.on('item:add', function(e, item){
-  console.log(item)
-  mainWindow.webContents.send('item:add', item);
+ipcMain.on('item:add', function(e, package){
+  console.log(package)
+  mainWindow.webContents.send('item:add', package);
   addWindow.close()
 })
 

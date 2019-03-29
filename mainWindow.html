@@ -1,41 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
+    <title>Shopping List</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    >
+    <link rel="stylesheet" href="./main.css">
+  </head>
+  <body>
+    <nav>
+      <div class="nav-wrapper">
+        <a  class="brand-logo center">Shopping List</a>
 
-  <title>Shopping List</title>
-</head>
-<body>
-  <h1>
-    ShoppingList
-  </h1>
-  <ul>
+      </div>
+    </nav>
+    <ul></ul>
+    <script>
+      const electron = require("electron");
+      const { ipcRenderer } = electron;
+      const ul = document.querySelector("ul");
 
-  </ul>
-  <script>
-    const electron = require('electron');
-    const {ipcRenderer} = electron;
-    const ul = document.querySelector('ul');
+      //catch add itme
+      ipcRenderer.on("item:add", function(e, package) {
+        ul.className = 'collection'
+        const li = document.createElement("li");
+        li.className = 'collection-item list'
+        const itemText = document.createTextNode(package.item);
+        const itemImage = document.createElement("img")
+        console.log(itemImage)
+        itemImage.src = package.image
+        li.appendChild(itemText);
+        li.appendChild(itemImage)
+        ul.appendChild(li);
+      });
 
+      // clear items
+      ipcRenderer.on("item: clear", function() {
+        ul.innerHTML = "";
+        ul.className= '';
+      });
 
-    //catch add itme
-    ipcRenderer.on('item:add', function(e, item) {
-      const li = document.createElement('li');
-      const itemText = document.createTextNode(item);
-      li.appendChild(itemText);
-      ul.appendChild(li)
-    })
-
-    // clear items
-    ipcRenderer.on('item: clear', function() {
-      ul.innerHTML = '';
-    })
-
-    //remove item
-    ul.addEventListener('dblclick', removeItem);
-    function removeItem(e){
-      e.target.remove()
-    }
-
-  </script>
-</body>
+      //remove item
+      ul.addEventListener("dblclick", removeItem);
+      function removeItem(e) {
+        e.target.remove();
+        if(ul.children.length == 0){
+          ul.className= '';
+        }
+      }
+    </script>
+  </body>
 </html>
